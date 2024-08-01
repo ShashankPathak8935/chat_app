@@ -201,14 +201,23 @@ app.post('/send-message', verifyToken, async (req, res) => {
 
 
 
+//
+
+app.get('/messages/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await pool.query(
+      'SELECT message, created_at FROM shashank_pathak.chatmessages WHERE receiver_id = $1 ORDER BY created_at DESC',
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).send('Server error');
+  }
+});
 
 
-
-
-
-
-
-  
 
 
 
