@@ -1,88 +1,94 @@
-/* Reset body margin and set font */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-}
-
-/* Sidebar styling */
-.sidebar {
-  width: 250px;
+/* Layout Container */
+.layout-container {
+  display: flex; /* Flexbox for layout */
+  flex-direction: column; /* Stack items vertically */
   height: 100vh; /* Full viewport height */
-  background-color: #343a40; /* Sidebar background color */
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  overflow-y: auto; /* Enable vertical scrolling if content overflows */
 }
 
-/* Title styling within the sidebar */
+/* Main Content Area */
+.main-content {
+  display: flex; /* Flexbox for layout */
+  flex: 1; /* Take up remaining space */
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px; /* Fixed width */
+  background-color: #343a40; /* Background color */
+  color: white; /* Text color */
+  display: flex; /* Flexbox for layout */
+  flex-direction: column; /* Stack items vertically */
+  padding: 20px; /* Padding */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Shadow */
+  overflow-y: auto; /* Vertical scrolling */
+}
+
+/* Sidebar Title */
 .sidebar-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  font-size: 24px; /* Font size */
+  font-weight: bold; /* Bold text */
+  margin-bottom: 20px; /* Space below title */
 }
 
-/* List styling for menu items */
+/* Sidebar Menu */
 .sidebar-menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  list-style: none; /* Remove default list styling */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margin */
 }
 
-/* Individual menu item styling */
+/* Sidebar Item */
 .sidebar-item {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  display: flex; /* Flexbox for layout */
+  align-items: center; /* Center items vertically */
+  padding: 10px; /* Padding */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 10px; /* Space below items */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth hover effect */
 }
 
-/* Hover effect for menu items */
+/* Sidebar Item Hover Effect */
 .sidebar-item:hover {
   background-color: #495057; /* Hover background color */
 }
 
-/* Icon styling for sidebar items */
+/* Sidebar Icon */
 .sidebar-icon {
-  font-size: 20px;
-  margin-right: 15px;
+  font-size: 20px; /* Font size */
+  margin-right: 15px; /* Space between icon and text */
 }
 
-/* Text styling for sidebar items */
+/* Sidebar Text */
 .sidebar-text {
-  font-size: 18px;
+  font-size: 18px; /* Font size */
 }
 
-/* User list styling */
+/* Sidebar User List */
 .sidebar-users {
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
+  list-style: none; /* Remove default list styling */
+  padding: 0; /* Remove padding */
+  margin-top: 20px; /* Space from the top */
 }
 
-/* Individual user item styling */
+/* Sidebar User Item */
 .sidebar-user-item {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
+  display: flex; /* Flexbox for layout */
+  align-items: center; /* Center items vertically */
+  padding: 10px; /* Padding */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 10px; /* Space below items */
 }
 
-/* User profile picture styling */
+/* User Profile Picture */
 .sidebar-user-pic {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
+  width: 40px; /* Size */
+  height: 40px; /* Size */
+  border-radius: 50%; /* Circular shape */
+  margin-right: 10px; /* Space between picture and name */
 }
 
-/* User name styling */
+/* User Name */
 .sidebar-user-name {
-  font-size: 16px;
+  font-size: 16px; /* Font size */
 }

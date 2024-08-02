@@ -11,7 +11,7 @@ const Sidebar = ({ onSelectUser }) => {
         const token = localStorage.getItem('token');
         const response = await axios.get('http://localhost:5000/users', {
           headers: {
-            Authorization: token
+            Authorization: `Bearer ${token}` // Add 'Bearer ' prefix
           }
         });
         setUsers(response.data);
@@ -28,8 +28,16 @@ const Sidebar = ({ onSelectUser }) => {
       <h2 className="sidebar-title">Users</h2>
       <ul className="sidebar-users">
         {users.map((user) => (
-          <li key={user.id} className="sidebar-user-item" onClick={() => onSelectUser(user.id)}>
-            <img src={`http://localhost:5000/${user.profile_picture}`} alt={user.username} className="sidebar-user-pic" />
+          <li
+            key={user.id}
+            className="sidebar-user-item"
+            onClick={() => onSelectUser(user.id)}
+          >
+            <img
+              src={`http://localhost:5000/${user.profile_picture}`}
+              alt={user.username}
+              className="sidebar-user-pic"
+            />
             <span className="sidebar-user-name">{user.username}</span>
           </li>
         ))}
