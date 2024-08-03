@@ -30,6 +30,17 @@
   margin-bottom: 20px; /* Space below title */
 }
 
+/* Sidebar Search */
+.sidebar-search {
+  width: 90%; /* Full width */
+  padding: 10px; /* Padding */
+  margin-bottom: 20px; /* Space below search bar */
+  border: 1px solid #ddd; /* Border */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #495057; /* Background color */
+  color: white; /* Text color */
+}
+
 /* Sidebar Menu */
 .sidebar-menu {
   list-style: none; /* Remove default list styling */
@@ -78,6 +89,13 @@
   padding: 10px; /* Padding */
   border-radius: 5px; /* Rounded corners */
   margin-bottom: 10px; /* Space below items */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth hover effect */
+}
+
+/* Sidebar User Item Hover Effect */
+.sidebar-user-item:hover {
+  background-color: #495057; /* Hover background color */
 }
 
 /* User Profile Picture */
@@ -91,4 +109,11 @@
 /* User Name */
 .sidebar-user-name {
   font-size: 16px; /* Font size */
+}
+
+/* Selected Sidebar User Item */
+.sidebar-user-item.selected {
+  background-color: #007bff; /* Selected background color */
+  color: white; /* Selected text color */
+  font-weight: bold; /* Bold text for selected item */
 }

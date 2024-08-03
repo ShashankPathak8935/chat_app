@@ -43,11 +43,14 @@ const Login = () => {
       try {
         const response = await axios.post('http://localhost:5000/login', formData);
         console.log('Login successful', response.data);
-
+  
         // Save the token and user data in localStorage
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-
+        localStorage.setItem('user_id', response.data.user.id); // Save user ID separately
+  
+        console.log("Stored user ID in localStorage:", localStorage.getItem('user_id'));
+  
         // Navigate to the home page
         navigate('/home');
       } catch (err) {
