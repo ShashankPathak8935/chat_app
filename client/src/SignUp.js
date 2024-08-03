@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './SignUp.css';
 import { FaUser, FaEnvelope, FaLock, FaFileUpload, FaEye, FaEyeSlash } from 'react-icons/fa';
 
@@ -15,7 +17,8 @@ const SignUp = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -46,6 +49,9 @@ const SignUp = () => {
     if (!formData.password) {
       errors.password = 'Password is required';
     }
+    if (!formData.file) {
+      errors.file = 'Profile picture is required';
+    }
     return errors;
   };
 
@@ -69,13 +75,19 @@ const SignUp = () => {
         });
 
         if (response.status === 201) {
-          // Redirect to login page on successful signup
-          navigate('/login');
+          toast.success('You are registered successfully!');
+          setTimeout(() => {
+            navigate('/login');
+          }, 2000);
         } else {
-          console.error('Unexpected response status:', response.status);
+          setMessage('Unexpected response status');
         }
       } catch (error) {
-        console.error('Error submitting form', error);
+        if (error.response && error.response.data) {
+          setMessage(error.response.data.message);
+        } else {
+          setMessage('An error occurred. Please try again.');
+        }
       }
     }
   };
@@ -84,6 +96,7 @@ const SignUp = () => {
     <div className="signup-container">
       <form onSubmit={handleSubmit} className="signup-form">
         <h2>Sign Up</h2>
+       
         <div className="form-group">
           <input
             type="text"
@@ -105,6 +118,7 @@ const SignUp = () => {
           />
           <FaEnvelope className="icon" />
           {errors.email && <p className="error">{errors.email}</p>}
+          {message && <p className={`message ${message.includes('successfully') ? 'success' : 'error'}`}>{message}</p>}
         </div>
         <div className="form-group">
           <input
@@ -145,6 +159,7 @@ const SignUp = () => {
           <a href="/login">Already have an account? Login</a>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };

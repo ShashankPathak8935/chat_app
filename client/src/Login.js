@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
 
 const Login = () => {
@@ -51,8 +53,13 @@ const Login = () => {
   
         console.log("Stored user ID in localStorage:", localStorage.getItem('user_id'));
   
-        // Navigate to the home page
-        navigate('/home');
+        // Show success notification
+        toast.success('You are logged in successfully!');
+  
+        // Navigate to the home page after a short delay
+        setTimeout(() => {
+          navigate('/home');
+        }, 2000);
       } catch (err) {
         setLoginError('Invalid email or password');
       }
@@ -97,6 +104,7 @@ const Login = () => {
           <a href="/signup">Don't have an account? Sign Up</a>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };
