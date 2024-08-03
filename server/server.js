@@ -173,13 +173,35 @@ app.post('/login', async (req, res) => {
 // Create a new endpoint to get the list of users
 app.get('/users',verifyToken, async (req, res) => {
   try {
-    const result = await pool.query('SELECT id, username, profile_picture FROM shashank_pathak.chatusers');
+    const result = await pool.query('SELECT id, username, profile_picture,fullname FROM shashank_pathak.chatusers');
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching users', err);
     res.status(500).send('Server error');
   }
 });
+
+
+
+// Endpoint to get user details by ID
+app.get('/users/:id', verifyToken, async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const result = await pool.query('SELECT id, username, fullname, profile_picture FROM shashank_pathak.chatusers WHERE id = $1', [userId]);
+    const user = result.rows[0];
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (err) {
+    console.error('Error fetching user details', err);
+    res.status(500).send('Server error');
+  }
+});
+
 
 
 

@@ -111,7 +111,7 @@ const Chat = ({ selectedUser }) => {
   return (
     <div className="chat-container">
       <h2 className="chat-title">
-        {selectedUserDetails ? `Chat with ${selectedUserDetails.username}` : "Let's Chat"}
+        {selectedUserDetails ? `Chat with ${selectedUserDetails.fullname}` : "Let's Chat"}
       </h2>
       <div className="chat-messages">
         {messages.map((msg, index) => (

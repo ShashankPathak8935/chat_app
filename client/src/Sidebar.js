@@ -60,7 +60,7 @@ const Sidebar = ({ onSelectUser }) => {
               alt={user.username}
               className="sidebar-user-pic"
             />
-            <span className="sidebar-user-name">{user.username}</span>
+            <span className="sidebar-user-name">{user.fullname}</span>
           </li>
         ))}
       </ul>
