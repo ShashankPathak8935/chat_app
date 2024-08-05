@@ -293,6 +293,56 @@ io.on('connection', (socket) => {
 
 console.log("Server is connected");
 
+
+// fetch all the users at create group page
+app.get('/fullnames', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM shashank_pathak.chatusers');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching full names', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+// Create a new group route
+app.post('/create-group', async (req, res) => {
+  const { groupName } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO shashank_pathak.chatgroups (group_name) VALUES ($1) RETURNING id',
+      [groupName]
+    );
+    const groupId = result.rows[0].id;
+    res.json({ groupId });
+  } catch (error) {
+    console.error('Error creating group:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+// for  adding group members in to table
+app.post('/add-group-members', async (req, res) => {
+  const { groupId, userIds } = req.body;
+  try {
+    // Prepare the query for adding multiple members
+    const values = userIds.map(userId => `(${groupId}, ${userId})`).join(',');
+    await pool.query(
+      `INSERT INTO shashank_pathak.groupmembers (group_id, user_id) VALUES ${values} ON CONFLICT DO NOTHING`
+    );
+    res.send('Members added successfully');
+  } catch (error) {
+    console.error('Error adding group members:', error);
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+
+
 server.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

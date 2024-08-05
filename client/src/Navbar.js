@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaBell, FaSignOutAlt } from 'react-icons/fa';
+import { FaBell, FaSignOutAlt, FaUsers } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
@@ -20,7 +20,11 @@ const Navbar = () => {
     localStorage.removeItem('user');
     // Redirect to login page
     navigate('/login');
-    
+  };
+
+  const handleCreateGroup = () => {
+    // Redirect to the group creation page
+    navigate('/group');
   };
 
   return (
@@ -30,11 +34,14 @@ const Navbar = () => {
         <div className="navbar-right">
           {user && (
             <div className="user-info">
-          
               <img src={`http://localhost:5000/${user.profilePicture}`} alt="Profile" className="profile-picture" />
               <span className="user-name">{user.username}</span>
             </div>
           )}
+          <button className="icon-button" onClick={handleCreateGroup}>
+            <FaUsers className="icon" />
+            <span className="button-text">Create Group</span>
+          </button>
           <button className="icon-button">
             <FaBell className="icon" />
             <span className="notification-count">3</span> {/* Example notification count */}

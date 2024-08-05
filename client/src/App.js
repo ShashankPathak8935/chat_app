@@ -7,6 +7,7 @@ import Sidebar from "./Sidebar";
 import Home from "./Home";
 import Chat from "./Chat";
 import PrivateRoute from "./PrivateRoute"; // Import PrivateRoute
+import Group from "./Group";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/navbar" element={<Navbar />}></Route>
         <Route path="/sidebar" element={<Sidebar />}></Route>
         <Route path="/chat" element={<Chat />}></Route>
+        <Route path="/group" element={<Group />}></Route>
         <Route path="/home"element={<PrivateRoute><Home /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
