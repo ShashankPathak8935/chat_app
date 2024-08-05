@@ -110,7 +110,7 @@ const SignUp = () => {
         </div>
         <div className="form-group">
           <input
-            type="email"
+            type="text"
             name="email"
             placeholder="Email"
             value={formData.email}
@@ -118,7 +118,7 @@ const SignUp = () => {
           />
           <FaEnvelope className="icon" />
           {errors.email && <p className="error">{errors.email}</p>}
-          {message && <p className={`message ${message.includes('successfully') ? 'success' : 'error'}`}>{message}</p>}
+           {message && <p className={`message ${message.includes('successfully') ? 'success' : 'error'}`}>{message}</p>}
         </div>
         <div className="form-group">
           <input
@@ -155,6 +155,7 @@ const SignUp = () => {
           {errors.file && <p className="error">{errors.file}</p>}
         </div>
         <button type="submit">Sign Up</button>
+       
         <div className="login-link">
           <a href="/login">Already have an account? Login</a>
         </div>

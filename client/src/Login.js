@@ -73,7 +73,7 @@ const Login = () => {
         <div className="form-group">
           <div className="input-container">
             <input
-              type="email"
+              type="text"
               name="email"
               placeholder="Email"
               value={formData.email}

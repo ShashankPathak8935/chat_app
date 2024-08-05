@@ -110,14 +110,15 @@ app.post('/signup', upload.single('file'), async (req, res) => {
   if (!fullName || !email || !username || !password || !profile_picture) {
     return res.status(400).send('All fields are required.');
   }
-
+        
   try {
     // Hash the password
-  
+    const result = await pool.query('SELECT * FROM shashank_pathak.chatusers WHERE email = $1', [email]);
+ 
     const emailCheck = await pool.query('SELECT * FROM shashank_pathak.chatusers WHERE email = $1', [email]);
     if (emailCheck.rows.length > 0) {
       return res.status(400).json({ message: 'Email already exists' });
-    }   
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert user into database
