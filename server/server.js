@@ -212,8 +212,8 @@ app.get('/users/:id', verifyToken, async (req, res) => {
 
 
 
-// Endpoint to handle sending messages
-// Endpoint to handle sending messages
+
+// Endpoint to handle sending messages for single user
 app.post('/send-message', verifyToken, (req, res) => {
   const { receiverId, message } = req.body;
   const senderId = req.userId; // User ID set by verifyToken middleware
@@ -244,7 +244,8 @@ app.post('/send-message', verifyToken, (req, res) => {
 
 
 
-// fetch msg from table to chat page
+// fetch msg of users from table to chat page
+
 app.get('/messages',verifyToken, (req, res) => {
   console.log('User ID:', req.userId); // Log the user ID to verify authentication
 
@@ -304,6 +305,74 @@ app.get('/fullnames', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+
+
+// Fetch group names on the sidebar
+app.get('/groups', verifyToken, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT id, group_name FROM shashank_pathak.chatgroups');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching groups', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// Send group message
+app.post('/send-group-message', verifyToken, async (req, res) => {
+  const { groupId, message, senderId } = req.body;
+  try {
+    const result = await pool.query(
+      'INSERT INTO shashank_pathak.groupmessages (group_id, message, sender_id) VALUES ($1, $2, $3) RETURNING *',
+      [groupId, message, senderId]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error('Error sending group message', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+
+// Fetch group messages
+app.get('/groups/:groupId/messages', verifyToken, async (req, res) => {
+  const { groupId } = req.params;
+  try {
+    const result = await pool.query('SELECT * FROM shashank_pathak.groupmessages WHERE group_id = $1', [groupId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching group messages', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// Fetch group details
+app.get('/groups/:groupId', verifyToken, async (req, res) => {
+  const { groupId } = req.params;
+  
+  
+  try {
+    // Fetch group details from the database
+    const result = await pool.query(
+      'SELECT * FROM shashank_pathak.chatgroups WHERE id = $1',
+      [groupId]
+    );
+console.log("result"+result);
+
+    if (result.rows.length > 0) {
+      res.json(result.rows[0]);
+    } else {
+      res.status(404).send('Group not found');
+    }
+  } catch (err) {
+    console.error('Error fetching group details', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
 
 
 
