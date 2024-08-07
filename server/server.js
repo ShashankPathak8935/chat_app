@@ -177,15 +177,30 @@ app.post('/login', async (req, res) => {
 
 
 // Create a new endpoint to get the list of users
-app.get('/users',verifyToken, async (req, res) => {
+app.get('/users', verifyToken, async (req, res) => {
   try {
-    const result = await pool.query('SELECT id, username, profile_picture,fullname FROM shashank_pathak.chatusers');
+    const userId = req.userId; // Get the userId from the token
+    
+    // Query to fetch users and count of unread messages for each user
+    const result = await pool.query(`
+      SELECT u.id, u.username, u.profile_picture, u.fullname,
+             COALESCE((
+               SELECT COUNT(*)
+               FROM shashank_pathak.chatmessages m
+               WHERE m.receiver_id = $1 AND m.sender_id = u.id AND m.read = FALSE
+             ), 0) AS unread_messages
+      FROM shashank_pathak.chatusers u
+      WHERE u.id != $1
+    `, [userId]);
+
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching users', err);
     res.status(500).send('Server error');
   }
 });
+
+
 
 
 
@@ -207,8 +222,6 @@ app.get('/users/:id', verifyToken, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-
-
 
 
 

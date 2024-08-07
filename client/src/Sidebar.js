@@ -79,7 +79,12 @@ const Sidebar = ({ onSelectUser, onSelectGroup }) => {
               alt={user.username}
               className="sidebar-user-pic"
             />
-            <span className="sidebar-user-name">{user.fullname}</span>
+            <span className="sidebar-user-name">
+              {user.fullname}
+              {user.unread_messages > 0 && (
+                <span className="unread-messages">{user.unread_messages}</span>
+              )}
+            </span>
           </li>
         ))}
         {filteredGroups.map((group) => (

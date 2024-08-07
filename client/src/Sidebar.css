@@ -117,3 +117,49 @@
   color: white; /* Selected text color */
   font-weight: bold; /* Bold text for selected item */
 }
+
+.sidebar {
+  /* existing styles */
+}
+
+.sidebar-search {
+  /* existing styles */
+}
+
+.sidebar-users {
+  /* existing styles */
+}
+
+.sidebar-user-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.sidebar-user-item.selected {
+  background-color: blueviolet;
+}
+
+.sidebar-user-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.sidebar-user-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.unread-messages {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 5px 10px;
+  font-size: 12px;
+}
