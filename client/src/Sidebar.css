@@ -118,18 +118,6 @@
   font-weight: bold; /* Bold text for selected item */
 }
 
-.sidebar {
-  /* existing styles */
-}
-
-.sidebar-search {
-  /* existing styles */
-}
-
-.sidebar-users {
-  /* existing styles */
-}
-
 .sidebar-user-item {
   display: flex;
   align-items: center;
