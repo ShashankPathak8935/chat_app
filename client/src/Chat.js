@@ -13,27 +13,33 @@ const Chat = ({ selectedUser, selectedGroup }) => {
 
   useEffect(() => {
     const userId = localStorage.getItem('user_id');
-    console.log("Current logged-in user ID:", userId);  // Log to verify storage
-
     const socketIo = io('http://localhost:5000');
-
+  
     if (selectedUser) {
       socketIo.emit('join-room', selectedUser);
     }
+  
     if (selectedGroup) {
       socketIo.emit('join-group', selectedGroup);
     }
-
+  
+    // Listen for private messages
     socketIo.on('receive-message', (messageData) => {
       setMessages((prevMessages) => [...prevMessages, messageData]);
     });
-
+  
+    // Listen for group messages
+    socketIo.on('receive-group-message', (messageData) => {
+      setMessages((prevMessages) => [...prevMessages, messageData]);
+    });
+  
     setSocket(socketIo);
-
+  
     return () => {
       socketIo.disconnect();
     };
   }, [selectedUser, selectedGroup]);
+  
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -42,25 +48,25 @@ const Chat = ({ selectedUser, selectedGroup }) => {
           const token = localStorage.getItem('token');
           const response = await axios.get('http://localhost:5000/messages', {
             headers: {
-              Authorization: `Bearer ${token}`
+              Authorization: `Bearer ${token}`,
             },
             params: {
-              receiverId: selectedUser
-            }
+              receiverId: selectedUser,
+            },
           });
           setMessages(response.data);
         } catch (error) {
           console.error('Error fetching messages', error);
         }
       }
-
+  
       if (selectedGroup) {
         try {
           const token = localStorage.getItem('token');
           const response = await axios.get(`http://localhost:5000/groups/${selectedGroup}/messages`, {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           });
           setMessages(response.data);
         } catch (error) {
@@ -68,9 +74,10 @@ const Chat = ({ selectedUser, selectedGroup }) => {
         }
       }
     };
-
+  
     fetchMessages();
   }, [selectedUser, selectedGroup]);
+  
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -91,15 +98,17 @@ const Chat = ({ selectedUser, selectedGroup }) => {
 
     const fetchGroupDetails = async () => {
       if (selectedGroup) {
+          
         try {
           const token = localStorage.getItem('token');
           const response = await axios.get(`http://localhost:5000/groups/${selectedGroup}`, {
+            
             headers: {
               Authorization: `Bearer ${token}`
             }
           });
          
-          
+        
           setSelectedGroupDetails(response.data);
           
         } catch (error) {
@@ -121,39 +130,37 @@ const Chat = ({ selectedUser, selectedGroup }) => {
     if (message.trim() && (selectedUser || selectedGroup)) {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('user_id');
-      console.log("Token:", token);
-      console.log("User ID:", userId);
-
+  
       try {
         if (selectedUser) {
           const response = await axios.post('http://localhost:5000/send-message', {
             receiverId: selectedUser,
             message,
-            senderId: userId
+            senderId: userId,
           }, {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           });
-
+  
           if (response.status === 201) {
             const messageData = response.data;
             socket.emit('send-message', messageData);
             setMessage('');
           }
         }
-
+  
         if (selectedGroup) {
           const response = await axios.post('http://localhost:5000/send-group-message', {
             groupId: selectedGroup,
             message,
-            senderId: userId
+            senderId: userId,
           }, {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           });
-
+  
           if (response.status === 201) {
             const messageData = response.data;
             socket.emit('send-group-message', messageData);
@@ -165,6 +172,7 @@ const Chat = ({ selectedUser, selectedGroup }) => {
       }
     }
   };
+  
 
   return (
     <div className="chat-container">

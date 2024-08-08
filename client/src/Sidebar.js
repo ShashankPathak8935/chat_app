@@ -42,6 +42,7 @@ const Sidebar = ({ onSelectUser, onSelectGroup }) => {
   };
 
   const handleUserClick = (id, type) => {
+
     setSelectedId(id);
     if (type === 'user') {
       onSelectUser(id);
@@ -89,9 +90,9 @@ const Sidebar = ({ onSelectUser, onSelectGroup }) => {
         ))}
         {filteredGroups.map((group) => (
           <li
-            key={group.id}
+            key={group.us_id}
             className={`sidebar-user-item ${selectedId === group.id ? 'selected' : ''}`}
-            onClick={() => handleUserClick(group.id, 'group')}
+            onClick={() => handleUserClick(group.us_id, 'group')}
           >
             <span className="sidebar-user-name">{group.group_name}</span>
           </li>

@@ -258,7 +258,6 @@ app.post('/send-message', verifyToken, (req, res) => {
 
 
 // fetch msg of users from table to chat page
-
 app.get('/messages',verifyToken, (req, res) => {
   console.log('User ID:', req.userId); // Log the user ID to verify authentication
 
@@ -285,25 +284,40 @@ app.get('/messages',verifyToken, (req, res) => {
 
 // Ensure socket connection is correctly set up
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log('A user connected');
 
-  // Handle joining a room
+  // Handle joining a user room for private chat
   socket.on('join-room', (userId) => {
     socket.join(userId);
-    console.log(`User ${userId} joined room`);
+    console.log(`User ${userId} joined room ${userId}`);
   });
 
-  // Handle sending messages
+  // Handle sending private messages
   socket.on('send-message', (messageData) => {
-    const { senderId, receiverId, message } = messageData;
+    const { receiverId } = messageData;
     io.to(receiverId).emit('receive-message', messageData);
+  });
+
+  // Handle joining a group room for group chat
+  socket.on('join-group', (groupId) => {
+    const room = `group-${groupId}`;
+    socket.join(room);
+    console.log(`User joined group room ${room}`);
+  });
+
+  // Handle sending group messages
+  socket.on('send-group-message', (messageData) => {
+    const { groupId } = messageData;
+    const room = `group-${groupId}`;
+    io.to(room).emit('receive-group-message', messageData);
   });
 
   // Handle user disconnection
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('A user disconnected');
   });
 });
+
 
 console.log("Server is connected");
 
@@ -324,7 +338,18 @@ app.get('/fullnames', async (req, res) => {
 // Fetch group names on the sidebar
 app.get('/groups', verifyToken, async (req, res) => {
   try {
-    const result = await pool.query('SELECT id, group_name FROM shashank_pathak.chatgroups');
+    const userId = req.userId; // Assuming verifyToken middleware sets req.userId
+
+    // Join query to fetch groups where the user is a member
+    const query = `
+      SELECT sc.*, sc.id as us_id, sg.*
+      FROM shashank_pathak.chatgroups sc
+      JOIN shashank_pathak.groupmembers sg ON sc.id = sg.group_id
+      WHERE sg.user_id = $1
+    `;
+
+    const result = await pool.query(query, [userId]);
+
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching groups', err);
@@ -332,19 +357,33 @@ app.get('/groups', verifyToken, async (req, res) => {
   }
 });
 
+
 // Send group message
-app.post('/send-group-message', verifyToken, async (req, res) => {
-  const { groupId, message, senderId } = req.body;
-  try {
-    const result = await pool.query(
-      'INSERT INTO shashank_pathak.groupmessages (group_id, message, sender_id) VALUES ($1, $2, $3) RETURNING *',
-      [groupId, message, senderId]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error('Error sending group message', err);
-    res.status(500).send('Server error');
+app.post('/send-group-message', verifyToken, (req, res) => {
+  const { groupId, message } = req.body;
+  const senderId = req.userId;
+
+  if (!groupId || !message) {
+    return res.status(400).json({ message: 'Group ID and message are required' });
   }
+
+  pool.query(
+    'INSERT INTO shashank_pathak.groupmessages (group_id, sender_id, message) VALUES ($1, $2, $3) RETURNING *',
+    [groupId, senderId, message],
+    (err, result) => {
+      if (err) {
+        console.error('Error storing group message', err);
+        return res.status(500).json({ message: 'Server error' });
+      }
+
+      const newMessage = result.rows[0];
+
+      // Emit the group message to all group members
+      io.to(`group-${groupId}`).emit('receive-group-message', newMessage);
+
+      res.status(201).json(newMessage);
+    }
+  );
 });
 
 
