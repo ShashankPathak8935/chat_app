@@ -176,7 +176,7 @@ app.post('/login', async (req, res) => {
 
 
 
-// Create a new endpoint to get the list of users
+// Create a new endpoint to get the list of users and groups 
 app.get('/users', verifyToken, async (req, res) => {
   try {
     const userId = req.userId; // Get the userId from the token

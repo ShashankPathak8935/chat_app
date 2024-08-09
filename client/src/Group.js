@@ -83,7 +83,7 @@ const Group = () => {
 
     } catch (error) {
       console.error('Error creating group:', error);
-      setNotification('An error occurred while creating the group.');
+      setNotification('this group already exits.');
     }
   };
 
