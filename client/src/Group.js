@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import './Group.css';
 
 const Group = () => {
   const [fullNames, setFullNames] = useState([]);
   const [checkedNames, setCheckedNames] = useState([]);
   const [groupName, setGroupName] = useState('');
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [notification, setNotification] = useState(''); // State for the notification message
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFullNames = async () => {
@@ -39,7 +40,22 @@ const Group = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    // Validate group name
+    if (!groupName.trim()) {
+      setNotification('Please enter a group name.');
+      return; // Prevent form submission if the group name is empty
+    }
+
+    // Check if at least two members are selected
+    if (checkedNames.length < 2) {
+      setNotification('Please select at least two members for this group.');
+      return; // Prevent form submission if fewer than two members are selected
+    }
+
     try {
+      // Clear the notification
+      setNotification('');
+
       // Create group
       const groupResponse = await axios.post('http://localhost:5000/create-group', {
         groupName,
@@ -57,10 +73,17 @@ const Group = () => {
         userIds,
       });
 
-      // Redirect to the home page
-      navigate('/home');
+      // Set success notification
+      setNotification('Group created successfully.');
+
+      // Optionally, you can navigate after a short delay
+      setTimeout(() => {
+        navigate('/home');
+      }, 2000); // 2-second delay before redirecting
+
     } catch (error) {
       console.error('Error creating group:', error);
+      setNotification('An error occurred while creating the group.');
     }
   };
 
@@ -76,7 +99,6 @@ const Group = () => {
           name="group-name"
           value={groupName}
           onChange={(e) => setGroupName(e.target.value)}
-          required
         />
 
         <div className="full-names">
@@ -94,6 +116,9 @@ const Group = () => {
             </div>
           ))}
         </div>
+
+        {/* Display the notification if there is one */}
+        {notification && <div className="notification">{notification}</div>}
 
         <button type="submit">Create Group</button>
       </form>
