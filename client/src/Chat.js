@@ -172,6 +172,12 @@ const Chat = ({ selectedUser, selectedGroup }) => {
       }
     }
   };
+  const handleKeyDown=(e)=>{
+    if(e.key==='Enter'){
+      e.preventDefault();
+      handleSend();
+    }
+  }
   
 
   return (
@@ -203,8 +209,10 @@ const Chat = ({ selectedUser, selectedGroup }) => {
           placeholder="Type your message..."
           className="chat-input"
           disabled={!selectedUser && !selectedGroup}
+          onKeyDown={handleKeyDown}
         />
         <button onClick={handleSend} className="chat-send-button" disabled={!selectedUser && !selectedGroup}>
+
           Send
         </button>
       </div>

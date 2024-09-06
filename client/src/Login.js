@@ -101,7 +101,7 @@ const Login = () => {
         {loginError && <p className="error">{loginError}</p>}
         <button type="submit">Login</button>
         <div className="signup-link">
-          <a href="/signup">Don't have an account? Sign Up</a>
+          <a href="/">Don't have an account? Sign Up</a>
         </div>
       </form>
       <ToastContainer />
